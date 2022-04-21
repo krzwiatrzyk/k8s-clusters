@@ -1,0 +1,37 @@
+version: 3 
+
+tasks:
+  encrypt-values:
+  - sops -e values.yaml > values.enc.yaml 
+
+  encrypt-and-replace:
+  - sops -i -e values.yaml
+
+  decrypt-and-replace:
+  - sops -i -d values.yaml
+  
+  decrypt-values:
+  - sops -d values.enc.yaml 
+  
+  edit:
+  - sops values.enc.yaml
+
+  install:helm-secrets:
+  - helm plugin install https://github.com/jkroepke/helm-secrets --version v3.13.0
+
+  template-with-encrypted-values:
+    dir: test-chart
+    cmds:
+    - helm secrets template . -f values-encrypted.yaml
+    - helm template  . -f secrets://values-encrypted.yaml
+
+  template-with-git-values:
+    dir: test-chart
+    cmds:
+    - helm template . -f secrets://https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/test/test-chart/values-unencrypted.yaml                                               
+    - helm template . -f secrets://https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/test/test-chart/values-encrypted.yaml
+
+  template-with-cluster-secret:
+    dir: test-chart
+    cmds:
+    - helm template . -f secrets+age-import-kubernetes://argocd/helm-secrets-private-keys#key.asc?https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/test/test-chart/values-unencrypted.yaml

@@ -1,3 +1,4 @@
 [submodule "local-cluster"]
 	path = local-cluster
 	url = https://github.com/krzwiatrzyk/local-cluster
+	branch = main

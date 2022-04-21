@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pihole
+  namespace: argocd
+spec:
+  project: homelab
+  source:
+    repoURL: https://charts.truecharts.org/
+    targetRevision: 5.0.x
+    chart: pihole
+    helm:
+      valueFiles: 
+      - secrets+age-import-kubernetes://argocd/helm-secrets-private-keys#key.asc?https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/argo-apps/values/pihole.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homelab
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true

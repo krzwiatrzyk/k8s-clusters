@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: pihole
+  namespace: homelab
+spec:
+  entryPoints:         
+    - websecure
+  routes:                      
+  - kind: Rule
+    match: Host(`pihole.127.0.0.1.nip.io`) || Host(`pihole.{{ .Values.hostIP }}.nip.io`)   
+    services:
+    - kind: Service
+      name: pihole
+      port: 9089      

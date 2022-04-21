@@ -1,0 +1,2 @@
+hostIP: {{ .Values.hostIP }}
+password: {{ .Values.password }}

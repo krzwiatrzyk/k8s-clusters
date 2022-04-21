@@ -1,0 +1,18 @@
+version: '3'
+
+tasks:
+  create:
+    desc: Create Cluster with GoCD installed
+    cmds:
+    - task: :cluster:create
+      vars:
+        CLUSTER_NAME: gocd
+    - task: :apps:gocd:install:helm
+    - kubectl apply -f manifests/gocd-ingress-route.yaml
+  
+  delete:
+    desc: Delete GoCD cluster
+    cmds:
+    - task: :cluster:delete
+      vars:
+        CLUSTER_NAME: gocd

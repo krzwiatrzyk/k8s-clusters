@@ -1,0 +1,37 @@
+version: '3'
+
+includes:
+  cluster: ../../local-cluster/.taskfiles/k3d.yaml
+
+vars:
+  CLUSTER_NAME: 
+    sh: basename "$PWD"
+
+tasks:
+  create:
+    desc: Create cluster
+    cmds:
+    - task: cluster:create
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+
+  delete:
+    desc: Delete Minimal cluster
+    cmds:
+    - task: cluster:delete
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+
+  start:
+    desc: Start cluster
+    cmds:
+    - task: cluster:start
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+
+  stop:
+    desc: Stop cluster
+    cmds:
+    - task: cluster:stop
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'

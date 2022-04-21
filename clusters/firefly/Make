@@ -1,0 +1,4 @@
+k3d-create-cluster:
+    k3d create cluster demo
+
+

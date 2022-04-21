@@ -1,0 +1,18 @@
+version: '3'
+
+tasks:
+  create:
+    desc: Create cluster with Dashy installed
+    cmds:
+    - task: :cluster:create
+      vars:
+        CLUSTER_NAME: dashy
+    - task: :cluster:wait-for-traefik
+    - task: :apps:dashy:install:flux
+  
+  delete:
+    desc: Delete Dashy cluster
+    cmds:
+    - task: :cluster:delete
+      vars:
+        CLUSTER_NAME: dashy

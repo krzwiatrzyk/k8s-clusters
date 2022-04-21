@@ -1,0 +1,23 @@
+version: '3'
+
+tasks:
+  create:
+    desc: Create cluster with {{ .CLUSTER_NAME }} installed
+    cmds:
+    - task: :cluster:create
+      vars:
+        CLUSTER_NAME: traefik-monitoring
+    - task: :cluster:wait-for-traefik
+    - task: :monitoring:prometheus-stack:install
+    - kubectl apply -f manifests/traefik-pod-monitor.yaml
+    - kubectl patch -n kube-system deployment traefik --patch-file configs/traefik-enable-metrics-patch.yaml
+    - curl https://grafana.com/api/dashboards/11462/revisions/1/download | sed 's/${DS_PROMETHEUS}/Prometheus/g' | sed 's/DS_PROMETHEUS/Prometheus/g' > configs/grafana/traefik-dashboard.json
+    - kubectl create configmap traefik-dashboard --from-file=traefik-dashboard.json=manifests/grafana/traefik-dashboard.yaml
+    - kubectl label configmap traefik-dashboard grafana_dashboard="1"
+
+  delete:
+    desc: Delete {{ .CLUSTER_NAME }} cluster
+    cmds:
+    - task: :cluster:delete
+      vars:
+        CLUSTER_NAME: traefik-monitoring

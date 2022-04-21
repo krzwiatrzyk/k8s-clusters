@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: homelab
+  namespace: argocd
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Homelab Applications
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: homelab
+    server: https://kubernetes.default.svc
+

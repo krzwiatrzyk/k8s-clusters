@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  project: apps
+  source:
+    repoURL: https://github.com/krzwiatrzyk/local-cluster.git
+    targetRevision: HEAD
+    path: clusters/firefly/argo-apps/templates
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+

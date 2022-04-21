@@ -1,0 +1,19 @@
+version: '3'
+
+tasks:
+  create:
+    desc: Create cluster with Istio installed
+    cmds:
+    - task: :cluster:create
+      vars:
+        CLUSTER_NAME: istio
+        DISABLE_TRAEFIK: true
+    - task: :monitoring:prometheus-stack:install
+    - task: :istio:kiali:install
+  
+  delete:
+    desc: Delete Istio cluster
+    cmds:
+    - task: :cluster:delete
+      vars:
+        CLUSTER_NAME: istio

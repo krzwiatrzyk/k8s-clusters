@@ -1,0 +1,67 @@
+version: 3
+
+tasks:
+  install:argocd:
+  - helm repo add argo https://argoproj.github.io/argo-helm
+  - helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f argocd-values.yaml
+
+  install:argo-apps:
+  - helm upgrade --install argo-apps argo-apps -n argocd
+
+  kubeseal:install:
+  - arkade get kubeseal
+
+  install:sealed-secrets:
+  - helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+  - helm upgrade --install sealed-secrets -n kube-system sealed-secrets/sealed-secrets -f sealed-secrets-values.yaml
+
+  test:create-secret:
+  - kubectl create secret generic secret-name --dry-run=client --from-literal=foo=bar -o yaml > secrets.yaml
+
+  test:obtain-cert:
+  - kubeseal --fetch-cert > cert.pem 
+
+  test:seal-secret:
+  - kubeseal --format yaml < secrets.yaml > sealed.yaml
+
+  test:seal-secret-with-cert:
+  - kubeseal --format yaml --cert cert.pem< secrets.yaml > sealed.yaml
+
+  test:age:create-key:
+    dir: test
+    cmds:
+    - age-keygen -o key.txt
+
+  install:sops:
+  - arkade get sops
+
+  install:age:
+  - sudo apt install age -y
+
+  install:direnv:
+  - sudo apt install direnv -y
+
+  direnv:allow:test:
+    dir: test
+    cmds:
+    - direnv allow .
+
+  create-key-secret:
+  - kubectl create secret generic -n argocd helm-secrets-private-keys --from-file=key.asc=${HOME}/.age
+
+  argocd:reposerver:debug:
+    vars:
+      ARGO_POD:
+        sh: kubectl get pods -n argocd -o name | grep repo-server
+    cmds:
+    - echo {{ .ARGO_POD }}
+    - kubectl debug -n argocd -it {{ .ARGO_POD }} --image=busybox:1.28 --target={{ .ARGO_POD }}
+
+  argocd:reposerver:copy-curl:
+    vars:
+      ARGO_POD:
+        sh: kubectl get pods -n argocd -o name | grep repo-server | cut -f 2 -d "/"
+    cmds:
+    - wget https://github.com/moparisthebest/static-curl/releases/latest/download/curl-amd64
+    - kubectl -n argocd cp curl-amd64 {{ .ARGO_POD }}:/tmp/curl 
+    - rm curl-amd64

@@ -1,0 +1,29 @@
+version: '3'
+
+tasks:
+  create:
+    desc: Create cluster with {{ .CLUSTER_NAME }} installed
+    cmds:
+    - task: :cluster:create
+      vars:
+        CLUSTER_NAME: teleport
+        DISABLE_TRAEFIK: true
+        EXTRA_VARS: >
+          -p "127.0.0.1:3022:3022@server:0" 
+          -p "127.0.0.1:3023:3023@server:0"
+          -p "127.0.0.1:3024:3024@server:0"
+          -p "127.0.0.1:3025:3025@server:0"
+          -p "127.0.0.1:3080:3080@server:0"
+          -p "127.0.0.1:3026:3026@server:0"
+          -p "127.0.0.1:3027:3027@server:0"
+          -p "127.0.0.1:3028:3028@server:0"
+          -p "127.0.0.1:3036:3036@server:0"
+    - task: :apps:teleport:install:helm
+    - task: :apps:teleport:add-user
+  
+  delete:
+    desc: Delete {{ .CLUSTER_NAME }} cluster
+    cmds:
+    - task: :cluster:delete
+      vars:
+        CLUSTER_NAME: teleport

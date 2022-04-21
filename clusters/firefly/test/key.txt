@@ -1,0 +1,3 @@
+# created: 2022-04-17T15:22:37+02:00
+# public key: age16qtfe9zrezadmwrhzvdxxgknzpdsyaphqnlesfg0cc0mqaqey4tqp96zmj
+AGE-SECRET-KEY-14AXJQ6SE5MZ7YE77KEZMEG8RLWWVULWA0YL2SP9EWTPMVD6WLFLQNM9NLF
