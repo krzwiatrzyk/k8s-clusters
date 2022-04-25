@@ -28,3 +28,8 @@ tasks:
 
   regenerate:
   - echo "TODO"
+
+  commit:
+  - task: git:commit:fast
+  - cd lib-system-manager && task git:commit:fast
+  - cd lib-cluster-manager && task git:commit:fast
