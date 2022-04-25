@@ -1,7 +1,6 @@
-[submodule "local-cluster"]
-	path = local-cluster
-	url = https://github.com/krzwiatrzyk/local-cluster
-	branch = main
-[submodule "ubuntu-setup"]
-	path = ubuntu-setup
-	url = https://github.com/krzwiatrzyk/ubuntu-setup
+[submodule "lib-system-manager"]
+	path = lib-system-manager
+	url = https://github.com/krzwiatrzyk/lib-system-manager
+[submodule "lib-cluster-manager"]
+	path = lib-cluster-manager
+	url = https://github.com/krzwiatrzyk/lib-cluster-manager
