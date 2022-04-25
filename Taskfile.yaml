@@ -30,6 +30,6 @@ tasks:
   - echo "TODO"
 
   commit:
-  - cd lib-system-manager && task git:commit:fast | echo
-  - cd lib-cluster-manager && task git:commit:fast | echo
+  - cd lib-system-manager && task git:commit:fast
+  - cd lib-cluster-manager && task git:commit:fast
   - task: git:commit:fast
