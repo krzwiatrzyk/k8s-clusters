@@ -6,7 +6,7 @@ includes:
   flux: lib-cluster-manager/.taskfiles/flux.yaml
   tools:syft: lib-cluster-manager/.taskfiles/tools/syft.yaml
   tools:grype: lib-cluster-manager/.taskfiles/tools/grype.yaml
-  git: lib-cluster-manager/.taskfiles/git.yaml
+  git: lib-system-manager/.taskfiles/git.yaml
   ansible: lib-cluster-manager/.taskfiles/ansible.yaml
   python: lib-cluster-manager/.taskfiles/python.yaml
   apps: lib-cluster-manager/.taskfiles/apps.yaml
