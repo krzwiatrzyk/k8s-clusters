@@ -16,8 +16,7 @@ tasks:
   edit:
   - sops values.enc.yaml
 
-  install:helm-secrets:
-  - helm plugin install https://github.com/jkroepke/helm-secrets --version v3.13.0
+
 
   template-with-encrypted-values:
     dir: test-chart
@@ -35,3 +34,15 @@ tasks:
     dir: test-chart
     cmds:
     - helm template . -f secrets+age-import-kubernetes://argocd/helm-secrets-private-keys#key.asc?https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/test/test-chart/values-unencrypted.yaml
+
+  test:create-secret:
+  - kubectl create secret generic secret-name --dry-run=client --from-literal=foo=bar -o yaml > secrets.yaml
+
+  test:obtain-cert:
+  - kubeseal --fetch-cert > cert.pem 
+
+  test:seal-secret:
+  - kubeseal --format yaml < secrets.yaml > sealed.yaml
+
+  test:seal-secret-with-cert:
+  - kubeseal --format yaml --cert cert.pem< secrets.yaml > sealed.yaml

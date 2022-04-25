@@ -1,11 +1,17 @@
 version: 3
 
 tasks:
-  install:argocd:
+  prepare:
+  - task: argocd:install
+  #- task: create-key-secret
+  #- sleep 2m
+  - task: argo-apps:install
+
+  argocd:install:
   - helm repo add argo https://argoproj.github.io/argo-helm
   - helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f argocd-values.yaml
 
-  install:argo-apps:
+  argo-apps:install:
   - helm upgrade --install argo-apps argo-apps -n argocd
 
   kubeseal:install:
@@ -15,22 +21,12 @@ tasks:
   - helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
   - helm upgrade --install sealed-secrets -n kube-system sealed-secrets/sealed-secrets -f sealed-secrets-values.yaml
 
-  test:create-secret:
-  - kubectl create secret generic secret-name --dry-run=client --from-literal=foo=bar -o yaml > secrets.yaml
 
-  test:obtain-cert:
-  - kubeseal --fetch-cert > cert.pem 
-
-  test:seal-secret:
-  - kubeseal --format yaml < secrets.yaml > sealed.yaml
-
-  test:seal-secret-with-cert:
-  - kubeseal --format yaml --cert cert.pem< secrets.yaml > sealed.yaml
 
   test:age:create-key:
     dir: test
     cmds:
-    - age-keygen -o key.txt
+    - age-keygen -o ${HOME}/.age
 
   install:sops:
   - arkade get sops
