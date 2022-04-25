@@ -2,3 +2,6 @@
 	path = local-cluster
 	url = https://github.com/krzwiatrzyk/local-cluster
 	branch = main
+[submodule "ubuntu-setup"]
+	path = ubuntu-setup
+	url = https://github.com/krzwiatrzyk/ubuntu-setup
