@@ -40,7 +40,7 @@ function is_running() {
     return 1
   fi
 
-  if ! servers_running || ! agents_running; then 
+  if ! servers_running; then #|| ! agents_running; then 
     return 1
   fi
 
@@ -66,14 +66,31 @@ function cluster_discovery() {
 }
 
 function servers_running() {
-  if [[ $(k3d cluster list | grep minimal | cut -d ' ' -f 4 | cut -d "/" -f 1) == $(k3d cluster list | grep minimal | cut -d ' ' -f 4 | cut -d "/" -f 2) ]]; then
+  while true; do
+    case "${1-none}" in
+    --clusterName ) local clusterName="$2"; shift 2;;
+    -- ) shift; break;;
+    * ) break;; 
+    esac
+  done
+  
+  export clusterName
+  if [[ $(k3d cluster list -o yaml | yq '.[] | select(.cluster.name==env(clusterName)) | .servers_running != 0') == "true" ]]; then
     return 0
   fi
   return 1
 }
 
 function agents_running() {
-  if [[ $(k3d cluster list | grep minimal | cut -d ' ' -f 11 | cut -d "/" -f 1) == $(k3d cluster list | grep minimal | cut -d ' ' -f 11 | cut -d "/" -f 2) ]]; then
+  while true; do
+    case "${1-none}" in
+    --clusterName ) local clusterName="$2"; shift 2;;
+    -- ) shift; break;;
+    * ) break;; 
+    esac
+  done
+
+  if [[ $(k3d cluster list | grep ${clusterName} | cut -d ' ' -f 11 | cut -d "/" -f 1) == $(k3d cluster list | grep ${clusterName} | cut -d ' ' -f 11 | cut -d "/" -f 2) ]]; then
     return 0
   fi
   return 1
@@ -88,6 +105,11 @@ function start() {
     "5" "$(cluster_title --clusterName teleport)" \
     "6" "$(cluster_title --clusterName traefik-monitoring)" \
     "7" "$(cluster_title --clusterName firefly)" \
+    "8" "$(cluster_title --clusterName argo-workflows)" \
+    "9" "$(cluster_title --clusterName kubeclarity)" \
+    "10" "$(cluster_title --clusterName testkube)" \
+    "11" "$(cluster_title --clusterName suspender)" \
+    "12" "$(cluster_title --clusterName kubesphere)" \
     3>&1 1>&2 2>&3);
 
     case ${CHOICE} in
@@ -108,9 +130,24 @@ function start() {
         ;;
     6)
         manageCluster --clusterName traefik-monitoring
-        ;;     
+        ;;
+    7)
+        manageCluster --clusterName firefly
+        ;;
     8)
-        listClusters
+        manageCluster --clusterName argo-workflows
+        ;;       
+    9)
+        manageCluster --clusterName kubeclarity
+        ;;
+    10)
+        manageCluster --clusterName testkube
+        ;;
+    11)
+        manageCluster --clusterName suspender
+        ;;
+    12)
+        manageCluster --clusterName kubesphere
         ;;
     *)
         echo "Not used."
@@ -138,6 +175,7 @@ function manageCluster() {
     "3" "Stop"   \
     "4" "Delete"  \
     "5" "Reinstall" \
+    "6" "Configure" \
     "9" "Back"  3>&1 1>&2 2>&3);
 
     cd clusters/${clusterName}
@@ -158,6 +196,9 @@ function manageCluster() {
     5)
         task delete
         task create
+        ;;
+    6)
+        task configure
         ;;
     9)
         start

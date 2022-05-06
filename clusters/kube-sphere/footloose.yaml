@@ -1,0 +1,15 @@
+cluster:
+  name: kube-sphere
+  privateKey: cluster-key
+machines:
+- count: 1
+  spec:
+    backend: docker
+    image: quay.io/footloose/centos7:0.6.3
+    name: node%d
+    portMappings:
+    - containerPort: 22
+    volumes:
+    - type: bind
+      destination: /test
+      source: /home/kwiatrzyk/Repos/k3d-demos/clusters/kube-sphere

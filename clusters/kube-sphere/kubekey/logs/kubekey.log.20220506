@@ -1,0 +1,60 @@
+14:17:42 UTC [GreetingsModule] Greetings
+14:17:42 UTC message: [node0]
+Greetings, KubeKey!
+14:17:42 UTC success: [node0]
+14:17:42 UTC [NodePreCheckModule] A pre-check on nodes
+14:17:43 UTC success: [node0]
+14:17:43 UTC [ConfirmModule] Display confirmation form
+14:17:43 UTC node0: sudo is required.
+14:17:43 UTC node0: conntrack is required.
+14:17:43 UTC node0: socat is required.
+14:19:03 UTC [GreetingsModule] Greetings
+14:19:04 UTC message: [node0]
+Greetings, KubeKey!
+14:19:04 UTC success: [node0]
+14:19:04 UTC [NodePreCheckModule] A pre-check on nodes
+14:19:04 UTC success: [node0]
+14:19:04 UTC [ConfirmModule] Display confirmation form
+14:19:04 UTC node0: sudo is required.
+14:19:04 UTC node0: conntrack is required.
+14:19:04 UTC node0: socat is required.
+14:19:52 UTC [GreetingsModule] Greetings
+14:19:53 UTC message: [node0]
+Greetings, KubeKey!
+14:19:53 UTC success: [node0]
+14:19:53 UTC [NodePreCheckModule] A pre-check on nodes
+14:19:53 UTC success: [node0]
+14:19:53 UTC [ConfirmModule] Display confirmation form
+14:19:53 UTC node0: sudo is required.
+14:19:53 UTC node0: conntrack is required.
+14:19:53 UTC node0: socat is required.
+14:20:42 UTC [GreetingsModule] Greetings
+14:20:42 UTC message: [node0]
+Greetings, KubeKey!
+14:20:42 UTC success: [node0]
+14:20:42 UTC [NodePreCheckModule] A pre-check on nodes
+14:20:43 UTC success: [node0]
+14:20:43 UTC [ConfirmModule] Display confirmation form
+14:20:43 UTC node0: sudo is required.
+14:20:43 UTC node0: conntrack is required.
+14:20:43 UTC node0: socat is required.
+14:22:09 UTC [GreetingsModule] Greetings
+14:22:09 UTC message: [node0]
+Greetings, KubeKey!
+14:22:09 UTC success: [node0]
+14:22:09 UTC [NodePreCheckModule] A pre-check on nodes
+14:22:09 UTC success: [node0]
+14:22:09 UTC [ConfirmModule] Display confirmation form
+14:22:09 UTC node0: sudo is required.
+14:22:09 UTC node0: conntrack is required.
+14:22:09 UTC node0: socat is required.
+14:41:07 UTC [GreetingsModule] Greetings
+14:41:07 UTC message: [node0]
+Greetings, KubeKey!
+14:41:07 UTC success: [node0]
+14:41:07 UTC [NodePreCheckModule] A pre-check on nodes
+14:41:07 UTC success: [node0]
+14:41:07 UTC [ConfirmModule] Display confirmation form
+14:41:07 UTC node0: sudo is required.
+14:41:07 UTC node0: conntrack is required.
+14:41:07 UTC node0: socat is required.

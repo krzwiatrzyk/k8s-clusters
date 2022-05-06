@@ -1,0 +1,43 @@
+version: '3'
+
+includes:
+  cluster: 
+    taskfile: ../../lib-cluster-manager/.taskfiles/k3d.yaml
+  suspender: 
+    taskfile: ../../lib-cluster-manager/k8s-apps/suspender/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/suspender
+    
+vars:
+  CLUSTER_NAME: 
+    sh: basename "$PWD"
+
+tasks:
+  configure:
+    - task: suspender:install:manifests
+ 
+  create:
+    cmds:
+    - task: cluster:create
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+    - task: cluster:wait-for-traefik
+    - task: configure 
+
+
+  delete:
+    cmds:
+    - task: cluster:delete
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+
+  start:
+    cmds:
+    - task: cluster:start
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+
+  stop:
+    cmds:
+    - task: cluster:stop
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'

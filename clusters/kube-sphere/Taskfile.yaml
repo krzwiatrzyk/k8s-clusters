@@ -1,0 +1,20 @@
+version: 3
+
+tasks:
+  create:
+  - footloose create
+
+  start:
+  - footloose start
+
+  ssh:
+  - footloose ssh root@node0
+
+  kubekey:install:
+  - curl -sfL https://get-kk.kubesphere.io | sh - 
+
+  kubekey:create-cluster:
+  - ./kk create cluster --with-kubernetes v1.23.6 --with-kubesphere 3.2.1
+
+  kubekey:install:requirements:
+  - yum install -y socat conntrack
