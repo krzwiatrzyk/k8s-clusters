@@ -110,6 +110,7 @@ function start() {
     "10" "$(cluster_title --clusterName testkube)" \
     "11" "$(cluster_title --clusterName suspender)" \
     "12" "$(cluster_title --clusterName kubesphere)" \
+    "13" "$(cluster_title --clusterName knative)" \
     3>&1 1>&2 2>&3);
 
     case ${CHOICE} in
@@ -148,6 +149,9 @@ function start() {
         ;;
     12)
         manageCluster --clusterName kubesphere
+        ;;
+    13)
+        manageCluster --clusterName knative
         ;;
     *)
         echo "Not used."
