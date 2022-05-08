@@ -298,8 +298,7 @@ repoServer:
           wget -qO /custom-tools/curl https://github.com/moparisthebest/static-curl/releases/latest/download/curl-amd64 \
 
           chmod +x /custom-tools/*
-
-          chmod +x /custom-tools/*
+          
       volumeMounts:
         - mountPath: /custom-tools
           name: custom-tools

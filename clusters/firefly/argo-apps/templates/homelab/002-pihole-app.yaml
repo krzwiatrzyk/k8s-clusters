@@ -11,7 +11,7 @@ spec:
     chart: pihole
     helm:
       valueFiles: 
-      - secrets+age-import-kubernetes://argocd/helm-secrets-private-keys#key.asc?https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/argo-apps/values/pihole.yaml
+      - secrets+age-import-kubernetes://argocd/helm-secrets-private-keys#key.asc?https://raw.githubusercontent.com/krzwiatrzyk/k8s-clusters/main/clusters/firefly/argo-apps/values/pihole.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: homelab

@@ -1,2 +1,2 @@
-hostIP: 192.168.43.170
-githubURL: https://raw.githubusercontent.com/krzwiatrzyk/local-cluster/main/clusters/firefly/argo-apps/values
+hostIP: 192.168.1.45
+githubURL: https://raw.githubusercontent.com/krzwiatrzyk/k8s-clusters/main/clusters/firefly/argo-apps/values

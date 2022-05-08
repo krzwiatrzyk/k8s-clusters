@@ -9,7 +9,8 @@ tasks:
 
   argocd:install:
   - helm repo add argo https://argoproj.github.io/argo-helm
-  - helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f argocd-values.yaml
+  - helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f values/argocd.yaml
+  - kubectl apply -f manifests/argocd-ingress-route.yaml
 
   argo-apps:install:
   - helm upgrade --install argo-apps argo-apps -n argocd
