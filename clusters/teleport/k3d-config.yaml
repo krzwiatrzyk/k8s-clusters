@@ -1,0 +1,50 @@
+
+apiVersion: k3d.io/v1alpha4
+kind: Simple
+servers: 1 
+agents: 0 
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 3022:3022
+    nodeFilters:
+      - server:0
+  - port: 3023:3023
+    nodeFilters:
+      - server:0
+  - port: 3024:3024
+    nodeFilters:
+      - server:0
+  - port: 3025:3025
+    nodeFilters:
+      - server:0
+  - port: 3080:3080
+    nodeFilters:
+      - server:0
+  - port: 3026:3026
+    nodeFilters:
+      - server:0
+  - port: 3027:3027
+    nodeFilters:
+      - server:0
+  - port: 3028:3028
+    nodeFilters:
+      - server:0
+  - port: 3036:3036
+    nodeFilters:
+      - server:0
+# volumes:
+#   - volume: /k3d/gocd:/k3d/gocd
+#     nodeFilters:
+#     - server:0
+options:
+  k3s:
+    extraArgs:
+    - arg: --disable=traefik
+      nodeFilters:
+      - server:0
+      

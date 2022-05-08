@@ -1,33 +1,13 @@
 version: '3'
 
 includes:
-  demo:microshift: lib-cluster-manager/.taskfiles/demo/microshift.yaml
-  charts: lib-cluster-manager/.taskfiles/charts.yaml
-  flux: lib-cluster-manager/.taskfiles/flux.yaml
-  tools:syft: lib-cluster-manager/.taskfiles/tools/syft.yaml
-  tools:grype: lib-cluster-manager/.taskfiles/tools/grype.yaml
   git: lib-system-manager/.taskfiles/git.yaml
-  ansible: lib-cluster-manager/.taskfiles/ansible.yaml
-  python: lib-cluster-manager/.taskfiles/python.yaml
-  apps: lib-cluster-manager/.taskfiles/apps.yaml
-  apps:teleport: lib-cluster-manager/.taskfiles/apps/teleport.yaml
-  local-apps: lib-cluster-manager/.taskfiles/local-apps.yaml
-  istio: lib-cluster-manager/.taskfiles/istio.yaml
-  monitoring: lib-cluster-manager/.taskfiles/monitoring.yaml
-  tools: lib-system-manager/.taskfiles/tools.yaml
-
-vars:
-  STATUS_FILES_PATH: .taskfiles/statusfiles
-  USER_STATUS_FILES_PATH: ~/.statusfiles
 
 tasks:
   default:
     cmds:
     - task -l
     silent: true
-
-  regenerate:
-  - echo "TODO"
 
   commit:
   - cd lib-system-manager && task git:commit:fast
