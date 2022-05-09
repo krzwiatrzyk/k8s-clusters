@@ -1,6 +1,8 @@
 [submodule "lib-system-manager"]
 	path = lib-system-manager
 	url = https://github.com/krzwiatrzyk/lib-system-manager
+	branch = main
 [submodule "lib-cluster-manager"]
 	path = lib-cluster-manager
 	url = https://github.com/krzwiatrzyk/lib-cluster-manager
+	branch = main
