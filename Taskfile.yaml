@@ -10,6 +10,7 @@ tasks:
     silent: true
 
   commit:
+  - task: fix
   - cd lib-system-manager && task git:commit:fast
   - cd lib-cluster-manager && task git:commit:fast
   - task: git:commit:fast
