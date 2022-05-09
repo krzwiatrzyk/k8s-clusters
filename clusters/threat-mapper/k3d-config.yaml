@@ -20,3 +20,6 @@ options:
     - arg: --disable=local-storage
       nodeFilters:
       - server:0
+    - arg: --disable=traefik
+      nodeFilters:
+      - server:0
