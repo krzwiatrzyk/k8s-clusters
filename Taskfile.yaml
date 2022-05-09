@@ -13,3 +13,11 @@ tasks:
   - cd lib-system-manager && task git:commit:fast
   - cd lib-cluster-manager && task git:commit:fast
   - task: git:commit:fast
+
+  fix:
+  - find .git/objects/ -size 0 -delete
+  - find .git/modules/lib-system-manager/objects/ -size 0 -delete
+  - find .git/modules/lib-cluster-manager/objects/ -size 0 -delete
+  - cd lib-cluster-manager; git fetch; cd ..
+  - cd lib-system-manager; git fetch; cd ..
+  - git fetch

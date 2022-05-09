@@ -4,6 +4,7 @@ This repository is containing different Kubernetes cluster scenarios with abilit
 
 ## Available clusters
 
-| Name    | Components |
-| ------- | ---------- |
-| knative | knative    |
+| Name    | Components              |
+| ------- | ----------------------- |
+| knative | knative                 |
+| firefly | robusta, argocd, pihole |

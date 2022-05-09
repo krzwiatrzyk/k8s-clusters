@@ -1,50 +1,50 @@
 version: 3
 
+includes:
+  cluster: 
+    taskfile: ../../lib-cluster-manager/.taskfiles/k3d.yaml
+  argocd: 
+    taskfile: ../../lib-cluster-manager/k8s-apps/argocd/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/argocd
+    
+vars:
+  CLUSTER_NAME: 
+    sh: basename "$PWD"
+
 tasks:
-  prepare:
-  - task: argocd:install
-  #- task: create-key-secret
-  #- sleep 2m
-  - task: argo-apps:install
+  configure:
+    - task: argocd:install:helm
+    - task: argocd:install:ingress-route
+    - task: argoapps:install
 
-  argocd:install:
-  - helm repo add argo https://argoproj.github.io/argo-helm
-  - helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace -f values/argocd.yaml
-  - kubectl apply -f manifests/argocd-ingress-route.yaml
-
-  argo-apps:install:
+  argoapps:install:
   - helm upgrade --install argo-apps argo-apps -n argocd
-
-  kubeseal:install:
-  - arkade get kubeseal
-
-  install:sealed-secrets:
-  - helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
-  - helm upgrade --install sealed-secrets -n kube-system sealed-secrets/sealed-secrets -f sealed-secrets-values.yaml
-
-
-
-  test:age:create-key:
-    dir: test
+ 
+  create:
     cmds:
-    - age-keygen -o ${HOME}/.age
+    - task: cluster:create
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+    - task: configure 
 
-  install:sops:
-  - arkade get sops
 
-  install:age:
-  - sudo apt install age -y
-
-  install:direnv:
-  - sudo apt install direnv -y
-
-  direnv:allow:test:
-    dir: test
+  delete:
     cmds:
-    - direnv allow .
+    - task: cluster:delete
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
 
-  create-key-secret:
-  - kubectl create secret generic -n argocd helm-secrets-private-keys --from-file=key.asc=${HOME}/.age
+  start:
+    cmds:
+    - task: cluster:start
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
+
+  stop:
+    cmds:
+    - task: cluster:stop
+      vars:
+        CLUSTER_NAME: '{{ .CLUSTER_NAME }}'
 
   argocd:reposerver:debug:
     vars:
@@ -62,3 +62,9 @@ tasks:
     - wget https://github.com/moparisthebest/static-curl/releases/latest/download/curl-amd64
     - kubectl -n argocd cp curl-amd64 {{ .ARGO_POD }}:/tmp/curl 
     - rm curl-amd64
+
+  robusta:install:generator:
+  - pip install -U robusta-cli --no-cache
+
+  robusta:generate:
+  - robusta gen-config

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: robusta
+  namespace: argocd
+spec:
+  project: notification
+  source:
+    repoURL: https://robusta-charts.storage.googleapis.com 
+    targetRevision: 0.9.x
+    chart: robusta
+    helm:
+      valueFiles: 
+      - https://
+      - secrets+age-import-kubernetes://argocd/helm-secrets-private-keys#key.asc?https://raw.githubusercontent.com/krzwiatrzyk/k8s-clusters/main/clusters/firefly/argo-apps/values/robusta.enc.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: notification
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
