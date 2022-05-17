@@ -15,6 +15,11 @@ tasks:
   - cd lib-cluster-manager && task git:commit:fast
   - task: git:commit:fast
 
+  pull:
+  - git pull
+  - cd lib-system-manager && git pull
+  - cd lib-cluster-manager && git pull
+
   fix:
   - find .git/objects/ -size 0 -delete
   - find .git/modules/lib-system-manager/objects/ -size 0 -delete
