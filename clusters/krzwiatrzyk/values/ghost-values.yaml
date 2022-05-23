@@ -1,0 +1,10 @@
+ghostEmail: krzwiatrzyk@protonmail.com
+ghostBlogTitle: krzwiatrzyk.pl
+ghostHost: krzwiatrzyk.pl
+
+ingress:
+  enabled: true
+  hostname: krzwiatrzyk.pl
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+

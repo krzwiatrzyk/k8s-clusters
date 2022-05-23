@@ -1,0 +1,55 @@
+version: 3
+
+includes:
+  cluster: 
+    taskfile: ../../lib-cluster-manager/.taskfiles/k3d.yaml
+  cert-manager: 
+    taskfile: ../../lib-cluster-manager/k8s-apps/cert-manager/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/cert-manager
+  ghost:
+    taskfile: ../../lib-cluster-manager/k8s-apps/ghost/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/ghost
+  openebs: 
+    taskfile: ../../lib-cluster-manager/k8s-storage/openebs/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-storage/openebs
+  k3sup:
+    taskfile: ../../lib-cluster-manager/cluster-installer/k3sup/Taskfile.yaml
+  traefik: 
+    taskfile: ../../lib-cluster-manager/k8s-networking/traefik/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-networking/traefik
+
+    
+vars:
+  CLUSTER_NAME: 
+    sh: basename "$PWD"
+
+tasks:
+  configure:
+    cmds:
+    - task: openebs:install:helm
+    - task: cert-manager:install:helm
+    - task: cert-manager:create:acme-cluster-issuer
+      vars:
+        EMAIL: krzwiatrzyk@protonmail.com
+        INGRESS_CLASS: traefik
+    - task: cert-manager:create:certificate
+      vars:
+        DOMAIN: krzwiatrzyk.pl
+    - task: traefik:create:tlsstore
+      vars:
+        DOMAIN: krzwiatrzyk.pl
+  
+  install:cluster:
+    cmds:
+    - task: k3sup:install:cluster
+      vars:
+        IP: 91.228.198.230
+        USER: root
+        NAME: krzwiatrzyk
+        K3S_EXTRA_ARGS: '--no-deploy local-storage'
+
+  install:ghost:
+  - task: ghost:install:helm:custom-values
+    vars:
+      VALUES_FILE:
+        sh: echo $(pwd)/values/ghost-values.yaml
