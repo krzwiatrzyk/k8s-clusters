@@ -8,3 +8,4 @@ This repository is containing different Kubernetes cluster scenarios with abilit
 | ------- | ----------------------- |
 | knative | knative                 |
 | firefly | robusta, argocd, pihole |
+| voyager | openebs, prometheus, grafana, traefik, kube-ns-suspender |

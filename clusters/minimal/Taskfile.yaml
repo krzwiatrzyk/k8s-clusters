@@ -1,7 +1,7 @@
 version: '3'
 
 includes:
-  cluster: ../../lib-cluster-manager/.taskfiles/k3d.yaml
+  cluster: ../../lib-cluster-manager/system-tools/k3d/Taskfile.yaml
 
 vars:
   CLUSTER_NAME: 
