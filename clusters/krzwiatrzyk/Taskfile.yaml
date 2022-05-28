@@ -49,7 +49,7 @@ tasks:
         K3S_EXTRA_ARGS: '--no-deploy local-storage'
 
   install:ghost:
-  - task: ghost:install:helm:custom-values
-    vars:
-      VALUES_FILE:
-        sh: echo $(pwd)/values/ghost-values.yaml
+  - task: ghost:install:custom-chart
+    # vars:
+    #   VALUES_FILE:
+    #     sh: echo $(pwd)/values/ghost-values.yaml
