@@ -1,0 +1,36 @@
+version: 3
+
+includes:
+  suspender: 
+    taskfile: ../../lib-cluster-manager/k8s-apps/suspender/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/suspender
+  teleport: 
+    taskfile: ../../lib-cluster-manager/k8s-apps/teleport/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/teleport
+  node-problem-detector:
+    taskfile: ../../lib-cluster-manager/k8s-utils/node-problem-detector/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-utils/node-problem-detector/teleport
+  heimdall:
+    taskfile: ../../lib-cluster-manager/k8s-apps/heimdall/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/heimdall/teleport
+  kubernetes-dashboard:
+    taskfile: ../../lib-cluster-manager/k8s-dashboard/kubernetes-dashboard/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-dashboard/kubernetes-dashboard/teleport
+  argus:
+    taskfile: ../../lib-cluster-manager/k8s-apps/argus/Taskfile.yaml
+    dir: ../../lib-cluster-manager/k8s-apps/argus/teleport
+  # TODO: uptime-kuma:
+    
+
+tasks:
+  configure:
+  - task: node-problem-detector:install:helm
+
+  - task: kubernetes-dashboard:install:helm
+  - task: kubernetes-dashboard:install:ingress-route
+  
+  - task: suspender:install:helm
+  - task: teleport:install:helm
+  - task: heimdall:install:helm
+
+  - task: argus:install:helm
