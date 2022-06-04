@@ -34,3 +34,35 @@ tasks:
   - task: heimdall:install:helm
 
   - task: argus:install:helm
+
+  install:app-of-apps:
+  - kubectl apply -f manifests/projects/apps.yaml -f manifests/apps/app-of-apps.yaml
+
+  add:repository:
+    vars:
+      USERNAME: '{{ .USERNAME }}'
+      PASSWORD: '{{ .PASSWORD }}'
+      REPOSITOY: '{{ .REPOSITORY }}'
+    cmds:
+    - >
+      argocd repo add 
+      --username {{ .USERNAME }}
+      --password {{ .PASSWORD }}
+      --insecure-skip-server-verification 
+      {{ .REPOSITORY }}
+ 
+  certificate:add:example:
+  - argocd cert add-tls git.example.com --from ~/myca-cert.pem
+
+  certificate:list:
+  - argocd cert list --cert-type https
+
+  login:
+    summary: |
+      Example URL:
+      > argocd.127.0.0.1.nip.io
+    vars:
+      URL: '{{ .URL }}'
+    cmds:
+    - argocd login {{ .URL }}
+
