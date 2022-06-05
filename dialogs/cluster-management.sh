@@ -112,6 +112,7 @@ function start() {
     "12" "$(cluster_title --clusterName kubesphere)" \
     "13" "$(cluster_title --clusterName knative)" \
     "14" "$(cluster_title --clusterName threat-mapper)" \
+    "15" "$(cluster_title --clusterName multi-cluster)" \
     3>&1 1>&2 2>&3);
 
     case ${CHOICE} in
@@ -156,6 +157,9 @@ function start() {
         ;;
     14)
         manageCluster --clusterName threat-mapper
+        ;;
+    15)
+        manageCluster --clusterName multi-cluster
         ;;
     *)
         echo "Not used."
