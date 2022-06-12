@@ -1,8 +1,10 @@
 version: 3
 
 includes:
+  grafana-cloud:
+    taskfile: ./taskfiles/grafana-cloud.yaml
   cluster: 
-    taskfile: ../../lib-cluster-manager/.taskfiles/k3d.yaml
+    taskfile: ../../lib-cluster-manager/system-tools/k3d/Taskfile.yaml
   cert-manager: 
     taskfile: ../../lib-cluster-manager/k8s-apps/cert-manager/Taskfile.yaml
     dir: ../../lib-cluster-manager/k8s-apps/cert-manager
@@ -38,6 +40,8 @@ tasks:
     - task: traefik:create:tlsstore
       vars:
         DOMAIN: krzwiatrzyk.pl
+    - task: ghost:install:custom-chart
+    - task: traefik:update
   
   install:cluster:
     cmds:
@@ -48,8 +52,45 @@ tasks:
         NAME: krzwiatrzyk
         K3S_EXTRA_ARGS: '--no-deploy local-storage'
 
-  install:ghost:
-  - task: ghost:install:custom-chart
-    # vars:
-    #   VALUES_FILE:
-    #     sh: echo $(pwd)/values/ghost-values.yaml
+  # repo: helm repo add traefik https://helm.traefik.io/traefik
+  traefik:update:
+  - >
+    helm secrets upgrade traefik traefik/traefik
+    -n kube-system
+    --reuse-values
+    -f values/traefik.yaml
+
+  # ----------- EXTRAS -------------
+
+  install:kubestr:
+  - wget -nc https://github.com/kastenhq/kubestr/releases/download/v0.4.31/kubestr_0.4.31_Linux_amd64.tar.gz
+  - mkdir -p kubestr
+  - tar zxvf kubestr_0.4.31_Linux_amd64.tar.gz --directory=kubestr
+  - chmod +x kubestr/kubestr
+  - sudo mv kubestr/kubestr /usr/local/bin/kubestr
+  - rm -rf kubestr
+
+  validate-storage-options:
+  - kubestr
+
+  kasten:install:
+
+  kasten:install:helm:add-repo:
+    cmds:
+    - helm repo add kasten https://charts.kasten.io/
+    status:
+    - helm repo list | grep kasten
+
+  kasten:install:helm:
+    deps:
+    - kasten:install:helm:add-repo
+    cmds:
+    - helm upgrade --install k10 kasten/k10 --namespace=kasten-io --create-namespace
+
+  helm-secrets:install:
+    cmds:
+    - helm plugin install https://github.com/jkroepke/helm-secrets --version v3.14.0 | true
+    - helm plugin update secrets
+    status:
+    - helm plugin list | grep secrets | grep 3.14
+

@@ -1,0 +1,43 @@
+version: 3
+
+tasks:
+  grafana-cloud:install:agent:config-map:
+  - sops -d manifests/grafana-cloud-agent-configmap.yaml | kubectl apply -f - -n grafana-cloud
+  - sops -d manifests/grafana-cloud-agent-logs-configmap.yaml | kubectl apply -f - -n grafana-cloud
+
+  grafana-cloud:install:agent:statefulset:
+    env:
+      MANIFEST_URL: https://raw.githubusercontent.com/grafana/agent/v0.24.0/production/kubernetes/agent-bare.yaml
+      NAMESPACE: grafana-cloud
+    cmds:
+    - /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/grafana/agent/v0.24.0/production/kubernetes/install-bare.sh)" | kubectl apply -f -
+
+
+  grafana-cloud:install:agent:daemonset:
+    env:
+      MANIFEST_URL: https://raw.githubusercontent.com/grafana/agent/v0.24.0/production/kubernetes/agent-loki.yaml
+      NAMESPACE: grafana-cloud
+    cmds:
+    - /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/grafana/agent/v0.24.0/production/kubernetes/install-bare.sh)" | kubectl apply -f -
+ 
+
+  grafana-cloud:install:kube-state-metrics:
+  - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+  - >
+    helm install kube-state-metrics prometheus-community/kube-state-metrics 
+    --set image.tag=v2.4.2 
+    -n grafana-cloud
+
+  grafana-cloud:create-namespace:
+    cmds:
+    - kubectl create namespace grafana-cloud
+    status:
+    - kubectl assert exist namespace grafana-cloud
+
+  grafana-cloud:install:
+    cmds:
+    - task: grafana-cloud:create-namespace
+    - task: grafana-cloud:install:kube-state-metrics
+    - task: grafana-cloud:install:agent:config-map
+    - task: grafana-cloud:install:agent:statefulset
+    - task: grafana-cloud:install:agent:daemonset
