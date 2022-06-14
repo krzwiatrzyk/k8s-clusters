@@ -3,6 +3,7 @@ version: 3
 includes:
   grafana-cloud:
     taskfile: ./taskfiles/grafana-cloud.yaml
+  robusta: ./taskfiles/robusta.yaml
   cluster: 
     taskfile: ../../lib-cluster-manager/system-tools/k3d/Taskfile.yaml
   cert-manager: 

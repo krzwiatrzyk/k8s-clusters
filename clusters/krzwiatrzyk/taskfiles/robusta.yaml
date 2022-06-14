@@ -1,0 +1,23 @@
+version: 3
+
+tasks:
+  install:generator:
+  - pip install -U robusta-cli --no-cache
+
+  generate:
+  - robusta gen-config
+
+  install:helm:add-repo:
+    cmds:
+    - helm repo add robusta https://robusta-charts.storage.googleapis.com
+    status:
+    - helm repo list | grep robusta
+
+  install:helm:
+  -  > 
+    helm secrets upgrade 
+    --install robusta 
+    robusta/robusta 
+    -f ./values/robusta.yaml 
+    -n robusta
+    --create-namespace
