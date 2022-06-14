@@ -1,0 +1,36 @@
+version: '3'
+
+# GIT_MODULE_VERSION: 0.0.1
+
+tasks:
+  configure:hooks:
+    desc: "Configure git hooks"
+    cmds:
+      - git config core.hooksPath '.git-hooks'
+    
+  commit:
+    cmds:
+    - task: add
+    - |
+      read -p "Enter type (feat,fix,docs): " TYPE
+      read -p "Enter scope (i.e. flux): " SCOPE
+      read -p "Enter subject (i.e. add test case): " SUBJECT
+      git commit -m "${TYPE}(${SCOPE}): ${SUBJECT}"
+    - task: push
+
+  commit:fast:
+    desc: Fast commit, I am lazy
+    cmds:
+    - task: add
+    - |
+      DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      git commit -m "feat(fast): ${DATE}" || echo
+      pwd
+    - task: push
+
+  add: git add . || echo 
+  push: git push origin main || echo
+
+  fix: 
+  - find .git/objects/ -size 0 -delete 
+  - git fetch
