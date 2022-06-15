@@ -1,0 +1,63 @@
+version: '3'
+
+# VERSION=0.0.1
+
+tasks:
+  create:
+    env:
+      K3D_FIX_DNS: 1
+    vars:
+      CLUSTER_NAME: "{{ .CLUSTER_NAME }}"
+    cmds:
+      - >
+        k3d cluster create -c k3d-config.yaml {{ .CLUSTER_NAME }}
+      - task: create-admin-service-account
+
+  delete:
+    vars:
+      CLUSTER_NAME: "{{ .CLUSTER_NAME }}"
+    cmds:
+      - >
+        k3d cluster delete {{ .CLUSTER_NAME }} 
+      - rm -rf .taskfiles/statusfiles/*
+
+  start:
+    vars:
+      CLUSTER_NAME: "{{ .CLUSTER_NAME }}"
+    cmds:
+      - >
+        k3d cluster start {{ .CLUSTER_NAME }} 
+
+  stop:
+    vars:
+      CLUSTER_NAME: "{{ .CLUSTER_NAME }}"
+    cmds:
+      - >
+        k3d cluster stop {{ .CLUSTER_NAME }} 
+
+  wait-for-traefik:
+    cmds:
+    - sleep 10s
+    - kubectl wait -n kube-system job/helm-install-traefik --for condition=Complete --timeout 300s
+    - kubectl wait -n kube-system job/helm-install-traefik-crd --for condition=Complete --timeout 300s
+    - sleep 5s
+    - kubectl wait -n kube-system deployment/traefik --for condition=Available --timeout 300s
+    - kubectl apply -f https://raw.githubusercontent.com/krzwiatrzyk/lib-cluster-manager/main/manifests/traefik-ingress-route.yaml
+    
+  create-admin-service-account:
+    cmds:
+    - kubectl -n kube-system create serviceaccount admin
+    - >
+      kubectl create clusterrolebinding admin
+      --clusterrole cluster-admin
+      --serviceaccount=kube-system:admin
+
+  get-admin-token:
+    desc: Display token with admin privileges
+    deps:
+    - create-admin-service-account
+    env:
+      SECRET_NAME:
+        sh: kubectl get secrets -n kube-system -o name | grep admin
+    cmds:
+    - kubectl get -n kube-system ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d && echo

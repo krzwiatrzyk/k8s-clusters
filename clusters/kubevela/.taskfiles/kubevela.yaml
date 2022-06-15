@@ -1,0 +1,8 @@
+version: 3
+
+tasks:
+  install:cli:
+    cmds:
+    - curl -fsSl https://static.kubevela.net/script/install-velad.sh | bash -s 1.4.2
+    status:
+    - command -v velad
