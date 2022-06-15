@@ -4,5 +4,13 @@ tasks:
   install:cli:
     cmds:
     - curl -fsSl https://static.kubevela.net/script/install-velad.sh | bash -s 1.4.2
+    - curl -fsSl https://kubevela.net/script/install.sh | bash -s 1.4.2
     status:
     - command -v velad
+    - command -v vela
+
+  install:
+  - vela install --version v1.4.2
+
+  install:ui:
+  - vela addon enable velaux --version=v1.4.2

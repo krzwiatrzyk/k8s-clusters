@@ -1,5 +1,10 @@
 version: '3'
 
+# KubeVela UI
+# login: admin
+# password: VelaUX12345
+
+
 includes:
   cluster: 
     taskfile: ./.taskfiles/k3d.yaml
@@ -11,8 +16,8 @@ vars:
 
 tasks:
   configure:
-    - task: kubeclarity:install:helm
-    - task: kubeclarity:install:ingress-route
+  - task: kubevela:install
+  - task: kubevela:install:ui
  
   create:
     cmds:
