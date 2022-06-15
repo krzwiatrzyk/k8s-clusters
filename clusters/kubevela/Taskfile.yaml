@@ -27,7 +27,6 @@ tasks:
     - task: cluster:wait-for-traefik
     - task: configure 
 
-
   delete:
     cmds:
     - task: cluster:delete

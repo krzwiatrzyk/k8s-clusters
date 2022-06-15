@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: velaux
+  namespace: vela-system
+spec:
+  entryPoints:         
+    - websecure
+  routes:                      
+  - kind: Rule
+    match: HostRegexp(`kubevela.{suffix.*}`)   
+    services:
+    - kind: Service
+      name: velaux
+      port: 80        

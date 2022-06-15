@@ -14,3 +14,6 @@ tasks:
 
   install:ui:
   - vela addon enable velaux --version=v1.4.2
+
+  install:ingress-route:
+  - kubectl apply -f manifests/kubevela-ingress-route.yaml
