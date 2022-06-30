@@ -1,0 +1,25 @@
+version: 3
+
+tasks:
+  add-repo:
+    cmds:
+    - helm repo add truecharts https://charts.truecharts.org/
+    status:
+    - helm repo list | grep truecharts
+
+  install:
+    deps:
+    - add-repo
+    cmds:
+    - >
+      helm secrets upgrade wg-easy truecharts/wg-easy
+      --install
+      --version 0.0.1
+      --namespace wg-easy
+      --create-namespace
+      -f secrets.yaml
+      -f values.yaml
+    - task: install:ingress-route
+
+  install:ingress-route:
+  - kubectl apply -f manifests/ingress-route.yaml

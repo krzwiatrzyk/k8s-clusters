@@ -1,0 +1,9 @@
+pilot:
+  enabled: true
+
+# ports:
+  # wg-easy-udp:
+  #   port: 51820
+  #   expose: true
+  #   exposedPort: 51280
+  #   protocol: UDP

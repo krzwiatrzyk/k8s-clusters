@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: wg-easy
+  namespace: wg-easy
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostRegexp(`wg-easy.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service 
+      name: wg-easy
+      port: 51821

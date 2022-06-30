@@ -1,0 +1,29 @@
+version: 3
+
+tasks:
+  install:helm:add-repo:
+    cmds:
+    - helm repo add cert-manager https://charts.jetstack.io
+    status:
+    - helm repo list | grep cert-manager
+
+  install:helm:
+    cmds:
+    - helm upgrade --install cert-manager cert-manager/cert-manager --namespace cert-manager --create-namespace --values=values/values.yaml
+
+  uninstall:
+    cmds:
+    - helm uninstall -n cert-manager cert-manager
+
+  create:acme-cluster-issuer:
+    env:
+      EMAIL: '{{ .EMAIL }}'
+      INGRESS_CLASS: '{{ .INGRESS_CLASS }}'
+    cmds:
+    - envsubst < manifests/acme-cluster-issuer.yaml | kubectl apply -f -
+
+  create:certificate:
+    env:
+      DOMAIN: '{{ .DOMAIN }}'
+    cmds:
+    - envsubst < manifests/certificate.yaml | kubectl apply -f -

@@ -1,0 +1,21 @@
+persistence:
+  config:
+    enabled: true
+
+# @default -- base64 encoded wg0.conf by running `base64 wg0.conf`
+configSecret:
+  # -- Store Wireguard config as a secret
+  enabled: false
+  # @default -- See values.yaml
+  config: |-
+    [Interface]
+    PrivateKey = <my-private-key>
+    Address = <interface address>
+    DNS = <interface DNS server>
+    PostUp = /config/up.sh %i
+    PreDown = /config/down.sh %i
+
+    [Peer]
+    PublicKey = <my-public-key>
+    AllowedIPs = 0.0.0.0/0
+    Endpoint = <peer endpoint>

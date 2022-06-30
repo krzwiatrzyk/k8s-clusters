@@ -1,0 +1,9 @@
+env:
+  WG_HOST: "wg-easy.krzwiatrzyk.pl"
+
+image:
+  tag: 7
+  
+persistence:
+  config:
+    enabled: false

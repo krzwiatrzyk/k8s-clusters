@@ -4,22 +4,23 @@ includes:
   grafana-cloud:
     taskfile: ./taskfiles/grafana-cloud.yaml
   robusta: ./taskfiles/robusta.yaml
-  cluster: 
-    taskfile: ../../lib-cluster-manager/system-tools/k3d/Taskfile.yaml
   cert-manager: 
-    taskfile: ../../lib-cluster-manager/k8s-apps/cert-manager/Taskfile.yaml
-    dir: ../../lib-cluster-manager/k8s-apps/cert-manager
+    taskfile: ./modules/cert-manager/Taskfile.yaml
+    dir: ./modules/cert-manager
   ghost:
-    taskfile: ../../lib-cluster-manager/k8s-apps/ghost/Taskfile.yaml
-    dir: ../../lib-cluster-manager/k8s-apps/ghost
+    taskfile: ../../../lib-cluster-manager/k8s-apps/ghost/Taskfile.yaml
+    dir: ../../../lib-cluster-manager/k8s-apps/ghost
   openebs: 
-    taskfile: ../../lib-cluster-manager/k8s-storage/openebs/Taskfile.yaml
-    dir: ../../lib-cluster-manager/k8s-storage/openebs
+    taskfile: ../../../lib-cluster-manager/k8s-storage/openebs/Taskfile.yaml
+    dir: ../../../lib-cluster-manager/k8s-storage/openebs
   k3sup:
-    taskfile: ../../lib-cluster-manager/cluster-installer/k3sup/Taskfile.yaml
+    taskfile: ../../../lib-cluster-manager/cluster-installer/k3sup/Taskfile.yaml
   traefik: 
-    taskfile: ../../lib-cluster-manager/k8s-networking/traefik/Taskfile.yaml
-    dir: ../../lib-cluster-manager/k8s-networking/traefik
+    taskfile: ./modules/traefik/Taskfile.yaml
+    dir: ./modules/traefik
+  wg-easy: 
+    taskfile: ./modules/wg-easy/Taskfile.yaml
+    dir: ./modules/wg-easy
 
     
 vars:
@@ -43,6 +44,8 @@ tasks:
         DOMAIN: krzwiatrzyk.pl
     - task: ghost:install:custom-chart
     - task: traefik:update
+    - task: traefik:install:ingress-route
+    - task: wg-easy:install
   
   install:cluster:
     cmds:
@@ -53,13 +56,6 @@ tasks:
         NAME: krzwiatrzyk
         K3S_EXTRA_ARGS: '--no-deploy local-storage'
 
-  # repo: helm repo add traefik https://helm.traefik.io/traefik
-  traefik:update:
-  - >
-    helm secrets upgrade traefik traefik/traefik
-    -n kube-system
-    --reuse-values
-    -f values/traefik.yaml
 
   # ----------- EXTRAS -------------
 

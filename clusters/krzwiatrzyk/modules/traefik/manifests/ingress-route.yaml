@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostRegexp(`traefik.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: TraefikService 
+      name: api@internal

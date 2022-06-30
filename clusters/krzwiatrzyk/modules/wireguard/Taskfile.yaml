@@ -1,0 +1,17 @@
+version: 3
+
+tasks:
+  add-repo:
+    cmds:
+    - helm repo add k8s-at-home https://k8s-at-home.com/charts/
+    status:
+    - helm repo lsit | grep k8s-at-home
+
+  install:
+  - >
+    helm secrets upgrade wireguard k8s-at-home/wireguard 
+    --install
+    --version 1.3.3
+    -n wireguard
+    --create-namespace
+    -f values.yaml
