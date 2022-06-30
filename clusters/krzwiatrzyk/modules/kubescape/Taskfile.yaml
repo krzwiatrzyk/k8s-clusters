@@ -1,0 +1,35 @@
+version: 3
+
+tasks:
+  install:cli:
+    cmds:
+    - curl -s https://raw.githubusercontent.com/armosec/kubescape/master/install.sh | /bin/bash
+    status:
+    - command -v kubescape
+
+  add-repo:
+    cmds:
+    - helm repo add armo https://armosec.github.io/armo-helm/
+    status:
+    - helm repo list | grep armo
+
+  install:
+    deps:
+    - add-repo
+    cmds:
+    - > 
+      helm secrets upgrade armo armo/armo-cluster-components
+      --install
+      -n armo-system 
+      --create-namespace 
+      -f secrets.yaml
+      -f values.yaml
+
+  uninstall:
+  - helm uninstall armo -n armo-system
+
+  scan:
+    deps:
+    - install:cli
+    cmds:
+    - kubescape scan --submit --account=8023bf5f-e29d-4f3f-af91-391a9eebd366
