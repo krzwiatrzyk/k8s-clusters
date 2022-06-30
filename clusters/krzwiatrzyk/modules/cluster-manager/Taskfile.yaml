@@ -1,0 +1,22 @@
+version: 3
+
+tasks:
+  admin:create:
+    cmds:
+    - kubectl -n kube-system create serviceaccount admin
+    - >
+      kubectl create clusterrolebinding admin
+      --clusterrole cluster-admin
+      --serviceaccount=kube-system:admin
+    status:
+    - kubectl get -n kube-system sa admin
+
+  admin:token:
+    desc: Display token with admin privileges
+    deps:
+    - admin:create
+    env:
+      SECRET_NAME:
+        sh: kubectl get secrets -n kube-system -o name | grep admin
+    cmds:
+    - kubectl get -n kube-system ${SECRET_NAME} -o jsonpath='{.data.token}' | base64 -d && echo

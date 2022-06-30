@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kubeapps.krzwiatrzyk.pl
+  namespace: kubeapps
+spec:
+  secretName: kubeapps.krzwiatrzyk.pl
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: kubeapps.krzwiatrzyk.pl
+  dnsNames:
+  - kubeapps.krzwiatrzyk.pl

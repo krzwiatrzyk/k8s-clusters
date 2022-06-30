@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubeapps
+  namespace: kubeapps
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostRegexp(`kubeapps.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service
+      name: kubeapps
+      port: 80
+  tls:
+    secretName: kubeapps.krzwiatrzyk.pl

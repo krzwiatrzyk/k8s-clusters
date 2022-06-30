@@ -1,0 +1,26 @@
+version: 3
+
+tasks:
+  add-repo:
+    cmds:
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
+    status:
+    - helm rpeo list | grep bitnami
+
+  install:
+    deps:
+    - add-repo
+    cmds:
+    - >
+      helm upgrade kubeapps bitnami/kubeapps 
+      --version 9.0.2
+      --install
+      -n kubeapps
+      --create-namespace
+      -f values.yaml
+
+  certificate:
+  - kubectl apply -f manifests/certificate.yaml
+  
+  ingress-route:
+  - kubectl apply -f manifests/ingress-route.yaml
