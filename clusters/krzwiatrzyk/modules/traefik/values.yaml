@@ -1,9 +1,36 @@
-pilot:
-  enabled: true
-
-# ports:
+ports:
+  websecure:
+    tls:
+      enabled: true
+  postgresql:
+    port: 5432
+    expose: true
+    exposedPort: 5432
+    protocol: TCP
   # wg-easy-udp:
   #   port: 51820
   #   expose: true
   #   exposedPort: 51280
   #   protocol: UDP
+
+
+podAnnotations:
+  prometheus.io/port: "8082"
+  prometheus.io/scrape: "true"
+priorityClassName: system-cluster-critical
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: true
+
+rbac:
+  enabled: true
+tolerations:
+- key: CriticalAddonsOnly
+  operator: Exists
+- effect: NoSchedule
+  key: node-role.kubernetes.io/control-plane
+  operator: Exists
+- effect: NoSchedule
+  key: node-role.kubernetes.io/master
+  operator: Exists

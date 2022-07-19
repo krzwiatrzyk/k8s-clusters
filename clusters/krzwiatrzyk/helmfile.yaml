@@ -1,0 +1,4 @@
+helmfiles:
+- path: modules/tellery/helmfile.yaml
+  values:
+  - components.yaml

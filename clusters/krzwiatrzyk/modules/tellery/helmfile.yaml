@@ -1,0 +1,13 @@
+repositories:
+ - name: tellery
+   url: https://tellery.github.io/charts/
+
+releases:
+- name: tellery
+  namespace: doctor
+  chart: tellery/tellery
+  condition: tellery.enabled
+  values:
+  - values.yaml
+  secrets:
+  - secrets.yaml

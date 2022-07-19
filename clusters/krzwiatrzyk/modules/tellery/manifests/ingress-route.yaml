@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tellery
+  namespace: doctor
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostRegexp(`tellery.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service
+      name: tellery-server
+      port: 8000
+  tls:
+    secretName: tellery.krzwiatrzyk.pl

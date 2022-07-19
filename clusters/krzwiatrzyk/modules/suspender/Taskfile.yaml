@@ -1,0 +1,22 @@
+version: 3
+
+tasks:
+  install:manifests:
+  - task: create-namespace
+  - kubectl apply -n kube-ns-suspender -f https://raw.githubusercontent.com/govirtuo/kube-ns-suspender/v2.1.0/manifests/run/base/service-pprof.yaml
+  - kubectl apply -n kube-ns-suspender -f https://raw.githubusercontent.com/govirtuo/kube-ns-suspender/v2.1.0/manifests/run/base/service-ui.yaml
+  - kubectl apply -k manifests/
+
+  create-namespace:
+  - kubectl create namespace kube-ns-suspender || true
+
+  install:plugin:
+    vars:
+      VERSION: 0.1.1
+    cmds:
+      - wget https://github.com/govirtuo/kubectl-suspender/releases/download/v{{ .VERSION }}/kubectl-suspender_linux_amd64
+      - chmod +x kubectl-suspender_linux_amd64
+      - sudo mv kubectl-suspender_linux_amd64 /usr/local/bin/kubectl-suspender
+
+  annotate-namespace:
+  - kubectl annotate namespace {{ .NAMESPACE }} kube-ns-suspender/controllerName=kube-ns-suspender

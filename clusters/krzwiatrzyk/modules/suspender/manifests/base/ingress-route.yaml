@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kube-ns-suspender
+  namespace: kube-ns-suspender
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostRegexp(`suspender.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service 
+      name: kube-ns-suspender-webui
+      port: 8080

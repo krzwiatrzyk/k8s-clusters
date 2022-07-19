@@ -15,6 +15,26 @@ tasks:
   - >
     helm secrets upgrade traefik traefik/traefik
     -n kube-system
-    --reuse-values
     -f values.yaml
     -f secrets.yaml
+    # --reuse-values
+    # --version 10.24.0
+
+
+  hub:
+    cmds:
+    - helm repo add traefik-hub https://helm.traefik.io/hub
+    - helm repo update
+    - |
+      helm upgrade --install traefik traefik/traefik \
+      --namespace hub-agent --create-namespace \
+      --set=additionalArguments='{--experimental.hub,--hub}' \
+      --set metrics.prometheus.addRoutersLabels=true \
+      --set providers.kubernetesIngress.allowExternalNameServices=true \
+      --set ports.web=null --set ports.websecure=null --set ports.metrics.expose=true \
+      --set ports.traefikhub-tunl.port=9901 --set ports.traefikhub-tunl.expose=true --set ports.traefikhub-tunl.exposedPort=9901 --set ports.traefikhub-tunl.protocol="TCP" \
+      --set service.type="ClusterIP" --set fullnameOverride=traefik-hub 
+    - |
+      helm secrets upgrade --install hub-agent traefik-hub/hub-agent -f traefik-hub-secrets.yaml \
+      --namespace hub-agent \
+      --create-namespace --set image.pullPolicy=Always --set image.tag=experimental

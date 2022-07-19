@@ -1,0 +1,11 @@
+externalPostgresql:
+  host: postgresql
+  port: 5432
+
+system:
+  web:
+    host: tellery.krzwiatrzyk.pl
+
+connector:
+  persistence:
+    accessMode: ReadWriteOnce
