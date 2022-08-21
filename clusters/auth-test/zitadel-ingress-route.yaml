@@ -1,0 +1,18 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: zitadel
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: HostRegexp(`zitadel.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service
+      name: zitadel
+      port: 8080
+      scheme: h2c
+      passHostHeader: true
+      #serversTransport: zitadel
+  tls: {}

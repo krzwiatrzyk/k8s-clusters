@@ -1,0 +1,25 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: openunison
+  namespace: openunison
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+  - match: HostRegexp(`openunison.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service
+      name: openunison-orchestra
+      port: 443
+      scheme: https
+  - match: HostRegexp(`kubernetes-dashboard.{suffix:.*}`)
+    kind: Rule
+    services:   
+    - kind: Service
+      name: openunison-orchestra
+      port: 443
+      scheme: https
+  tls: {}

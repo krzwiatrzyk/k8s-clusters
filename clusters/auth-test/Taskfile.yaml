@@ -1,0 +1,66 @@
+version: '3'
+
+vars:
+  CLUSTER_NAME: 
+    sh: basename "$PWD"
+
+tasks:
+  create:
+    cmds:
+    - task: cluster:create
+    - task: ingress-nginx:install
+    - task: kubernetes-dashboard:install
+    - task: openunison:install
+
+
+  cluster:create:
+    cmds:
+    - k3d cluster create {{ .CLUSTER_NAME }} --config k3d-config.yaml
+    - sleep 30s
+    status:
+    - k3d cluster list | grep {{ .CLUSTER_NAME }}
+ 
+  cluster:delete:
+    cmds:
+    - k3d cluster delete {{ .CLUSTER_NAME }}
+
+  zitadel:install:
+    cmds:
+    - helm upgrade --install zitadel krzwiatrzyk/zitadel -f zitadel-values.yaml
+
+  zitadel:uninstall:
+    cmds:
+    - helm uninstall zitadel
+    - kubectl delete pvc datadir-crdb-0 
+
+  kubernetes-dashboard:install:
+    cmds:
+    - kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+
+  openunison:install:
+    cmds:
+    - ouctl install-auth-portal open-unison-values.yaml -s openunison-sercrets.yaml
+
+  ingress-nginx:install:
+    cmds:
+    - helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+    - |
+      helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+      -n ingress-nginx --create-namespace -f ingress-nginx.yaml
+
+  traefik:uninstall:
+    cmds:
+    - helm uninstall traefik -n kube-system
+
+  openunison:plugin:install:
+  - kubectl krew install oulogin
+
+  openunison:login:
+  - kubectl oulogin --host=openunison.192.168.56.103.nip.io
+
+  copy:certs:
+  - sudo cp -R certs/* /usr/local/share/ca-certificates
+  - sudo update-ca-certificates
+
+  admin:
+  - kubectl create clusterrolebinding krzwiatrzyk-cluster-admin --user krzwiatrzyk --clusterrole cluster-admin

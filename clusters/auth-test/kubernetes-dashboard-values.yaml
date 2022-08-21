@@ -1,0 +1,13 @@
+# --enable-skip-login
+# --disable-settings-authorizer
+# --enable-insecure-login
+# --insecure-bind-address=0.0.0.0
+
+extraArgs:
+  - --enable-insecure-login
+  - --system-banner="Welcome to Kubernetes"
+
+protocolHttp: true
+
+service:
+  externalPort: 80

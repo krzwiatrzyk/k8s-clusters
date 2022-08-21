@@ -1,0 +1,18 @@
+controller:
+  resources:
+    requests:
+      cpu: 1
+      memory: 500Mi
+    # limits:
+    #   cpu: 2
+    #   memory: 1000Mi
+  kind: Deployment
+  updateStrategy:
+    type: Recreate
+  hostPort:
+    enabled: false
+  watchIngressWithoutClass: true
+  ingressClassResource:
+    default: true
+  service:
+    type: LoadBalancer
